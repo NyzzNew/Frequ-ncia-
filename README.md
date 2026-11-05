@@ -1,5 +1,14 @@
 # Frequência
 
+## Baixar para Android
+
+[![Baixar APK — Frequência](https://img.shields.io/badge/BAIXAR%20APK-Frequ%C3%AAncia%20para%20Android-5B21B6?style=for-the-badge&logo=android&logoColor=white)](https://github.com/NyzzNew/Frequ-ncia-/releases/latest/download/Frequencia-0.1.0.apk)
+
+[Ver a página de versões e notas de instalação](https://github.com/NyzzNew/Frequ-ncia-/releases/latest)
+
+> **Versão de teste:** o botão só disponibiliza um arquivo depois que o GitHub Actions compila, verifica e publica o APK na página Releases. O repositório está privado; outras pessoas precisam de acesso autorizado para baixar.
+
+
 App de comunidades para Android, com servidores privados, canais de texto e salas de voz. Interface em português inspirada no mockup do servidor **Os Crias**.
 
 Todos os recursos desta versão são liberados para todas as contas. O projeto pode rodar num computador da própria comunidade. A disponibilidade de um servidor na internet depende da infraestrutura que o hospeda.
