@@ -22,7 +22,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Configurar Android SDK e sdkmanager
+        uses: android-actions/setup-android@v4
+      - name: Instalar SDK 35 e Build Tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - run: node --test server/server.test.mjs
       - run: ./gradlew --no-daemon :app:assembleDebug
       - run: |
