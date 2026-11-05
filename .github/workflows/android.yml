@@ -22,12 +22,37 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - uses: android-actions/setup-android@v3
       - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - run: node --test server/server.test.mjs
       - run: ./gradlew --no-daemon :app:assembleDebug
+      - run: "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify app/build/outputs/apk/debug/app-debug.apk
       - uses: actions/upload-artifact@v4
         with:
           name: Frequencia-Android-teste
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'Publica o APK do Frequência 0.1.0'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Frequencia-Android-teste
+          path: apk
+      - name: Publicar o APK de teste 0.1.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          mv apk/app-debug.apk Frequencia-0.1.0.apk
+          gh release create v0.1.0 Frequencia-0.1.0.apk --target "$GITHUB_SHA" --title "Frequência 0.1.0" --latest --notes-file - <<'NOTES'
+          Versão de teste do Frequência para Android 9 ou superior.
+
+          Em **Assets**, toque em **Frequencia-0.1.0.apk** e abra o arquivo baixado. No app, toque em **Experimentar Os Crias** para ver a demonstração.
+
+          Este APK foi compilado no GitHub Actions com uma chave de teste. Para quem instalou o APK anterior, o Android exige uma instalação nova. Desinstalar a cópia anterior apaga os dados locais de demonstração.
+          NOTES
