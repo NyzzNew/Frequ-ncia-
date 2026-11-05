@@ -1,0 +1,32 @@
+services:
+  app:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      DATA_DIR: /data
+      LIVEKIT_URL: "ws://${LAN_IP:?Informe o IP local em .env}:7880"
+      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY:-frequencia}"
+      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET:?Defina o segredo LiveKit em .env}"
+      REGISTRATION_KEY: "${REGISTRATION_KEY:-}"
+      FILE_QUOTA_MB: "${FILE_QUOTA_MB:-4096}"
+    ports:
+      - "${LAN_IP}:8787:8787/tcp"
+    volumes:
+      - db:/data
+
+  voz:
+    image: livekit/livekit-server:v1.9.0
+    restart: unless-stopped
+    command: ["--config", "/etc/livekit.yaml", "--node-ip", "${LAN_IP}"]
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY:-frequencia}: ${LIVEKIT_API_SECRET}"
+    volumes:
+      - ./server/livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      - "${LAN_IP}:7880:7880/tcp"
+      - "${LAN_IP}:7881:7881/tcp"
+      - "${LAN_IP}:7882:7882/udp"
+
+volumes:
+  db:
