@@ -25,7 +25,8 @@ jobs:
       - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - run: node --test server/server.test.mjs
       - run: ./gradlew --no-daemon :app:assembleDebug
-      - run: "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify app/build/outputs/apk/debug/app-debug.apk
+      - run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify app/build/outputs/apk/debug/app-debug.apk
       - uses: actions/upload-artifact@v4
         with:
           name: Frequencia-Android-teste
@@ -33,7 +34,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'Publica o APK do Frequência 0.1.0'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'Publica o APK do Frequência 0.1.0')
     needs: build
     runs-on: ubuntu-latest
     permissions:
